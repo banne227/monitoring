@@ -27,7 +27,7 @@ def parse_listings(html):
     return annonces
 
 if __name__ == "__main__":
-    html = get_html(url)
+    html = get_html(url) 
     listings = parse_listings(html)
         for listing in listings:
             print(listing)
