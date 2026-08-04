@@ -21,13 +21,15 @@ def parse_listings(html):
     annonces = []
     for item in items:
         name = item.get("name")
+        price_tag = item.find("span", class_="item-price")
+        price = price_tag.get_text(" ", strip=True).replace("\xa0", " ") if price_tag else None
         link = f"https://www.pap.fr{item['href']}"
         if name and link:
-            annonces.append({"ID": name, "link": link})
+            annonces.append({"ID": name, "link": link, "price": price})
     return annonces
 
 if __name__ == "__main__":
-    html = get_html(url) 
+    html = get_html(url)
     listings = parse_listings(html)
-        for listing in listings:
-            print(listing)
+    for listing in listings:
+        print(listing)
