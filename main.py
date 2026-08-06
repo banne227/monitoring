@@ -6,7 +6,7 @@ from scrapper import get_html, parse_listings
 
 # Load the .env
 load_dotenv()
-url = os.getenv("PAP_SEARCH_URL")
+url = os.getenv("SEARCH_URL")
 
 def main():
     try:
