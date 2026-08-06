@@ -3,6 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 
+# Load the .env
 load_dotenv()
 url = os.getenv("PAP_SEARCH_URL")
 
@@ -21,15 +22,22 @@ def parse_listings(html):
     annonces = []
     for item in items:
         name = item.get("name")
+        city = item.find("span", class_="h1")
+        city_name = city.text.strip() if city else None
         price_tag = item.find("span", class_="item-price")
-        price = price_tag.get_text(" ", strip=True).replace("\xa0", " ") if price_tag else None
-        link = f"https://www.pap.fr{item['href']}"
+        price = price_tag.text.strip().replace("\xa0", " ") if price_tag else None
+        link = f"https://www.pap.fr{item.get('href')}" if item.get("href") else None
         if name and link:
-            annonces.append({"ID": name, "link": link, "price": price})
+            annonces.append({"ID": name, "link": link, "price": price, "city": city_name})
     return annonces
 
 if __name__ == "__main__":
-    html = get_html(url)
+    try:
+        html = get_html(url)
+    except requests.RequestException as e:
+        print(f"Error fetching HTML: {e}")
+        exit(1)
+
     listings = parse_listings(html)
     for listing in listings:
         print(listing)
